@@ -53,7 +53,7 @@ repos:
       hooks:
           - id: djlint-reformat-django
           - id: djlint-django
-            args: [--ignore=H006, --reformat]
+            args: [--ignore=H006]
 
     - repo: local
       hooks:
