@@ -27,7 +27,7 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []  # type: ignore
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]  # type: ignore
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "todo",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "todo:list"
+LOGOUT_URL = "/accounts/logout/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
+APPEND_SLASH = False

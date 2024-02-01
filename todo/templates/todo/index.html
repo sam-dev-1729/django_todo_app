@@ -10,82 +10,100 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!--style-->
         <style>
-      .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5),
-          0 6px 20px 0 rgba(0, 0, 0, 0.39);
-        background: lightpink;
-        margin-bottom: 5%;
-        border-radius: 25px;
-        padding: 2%;
-        overflow: auto;
-        resize: both;
-        text-overflow: ellipsis;
-      }
-      .card:hover {
-        background: lightblue;
-      }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.39);
+            background: lightblue;
+            margin-bottom: 5%;
+            border-radius: 25px;
+            padding: 2%;
+            overflow: auto;
+            resize: both;
+            text-overflow: ellipsis;
+        }
+        .card:hover {
+            background: lightgreen;
+        }
 
-      .submit_form {
-        text-align: center;
-        padding: 3%;
-        background: pink;
-        border-radius: 25px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4),
-          0 6px 20px 0 rgba(0, 0, 0, 0.36);
-      }
+        .submit_form {
+            text-align: center;
+            padding: 3%;
+            background: lightblue;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.36);
+        }
         </style>
     </head>
     <body class="container-fluid">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info">
-                    <strong>{{ message }}</strong>
-                </div>
-            {% endfor %}
-        {% endif %}
-        <center class="row">
-            <h1>
-                <i>__TODO LIST__</i>
-            </h1>
-            <hr />
-        </center>
-        <div class="row">
-            <div class="col-md-8">
-                {% for i in list %}
-                    <div class="card">
-                        <center><b>{{ i.title }}</b></center>
-                        <hr />
-                        {{ i.date }}
-                        <hr />
-                        {{ i.details }}
-                        <br />
-                        <br />
-                        <form action="/del/{{ i.id }}"
-                              method="POST"
-                              style="padding-right: 4%;
-                                     padding-bottom: 3%">
-                            {% csrf_token %}
-                            <button value="remove"
-                                    type="submit"
-                                    class="btn btn-primary"
-                                    style="float: right">
-                                <span class="glyphicon glyphicon-trash"></span> remove
-                            </button>
-                        </form>
+        {% if user.is_authenticated %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        <strong>{{ message }}</strong>
                     </div>
                 {% endfor %}
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-3">
-                <div class="submit_form">
-                    <form method="POST">
-                        {% csrf_token %} {{ forms }}
-                        <center>
-                            <input type="submit" class="btn btn-default" value="submit" />
-                        </center>
-                    </form>
+            {% endif %}
+            <center class="row">
+                <h1>
+                    <i>__TODO LIST__</i>
+                </h1>
+                <hr />
+            </center>
+            <div class="row">
+                <div class="col-md-8">
+                    {% for i in list %}
+                        <div class="card">
+                            <center><b>{{ i.title }}</b></center>
+                            <hr />
+                            {{ i.date }}
+                            <hr />
+                            {{ i.details }}
+                            <br />
+                            <br />
+                            <form action="{% url 'todo:del' pk=i.id %}"
+                                  method="POST"
+                                  style="padding-right: 4%;
+                                         padding-bottom: 3%">
+                                {% csrf_token %}
+                                <button value="remove"
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        style="float: right">
+                                    <span class="glyphicon glyphicon-trash"></span> remove
+                                </button>
+                            </form>
+                            {% comment %}
+                        <form action="/del/{{ i.id }}" method="POST" style="padding-right: 4%; padding-bottom: 3%">
+                            {% csrf_token %}
+                            <button value="remove" type="submit" class="btn btn-primary" style="float: right">
+                                <span class="glyphicon glyphicon-trash"></span> remove
+                            </button>
+                            </form> {% endcomment %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <div class="submit_form">
+                        <form method="POST">
+                            {% csrf_token %} {{ forms }}
+                            <center>
+                                <input type="submit" class="btn btn-default" value="submit" />
+                            </center>
+                        </form>
+                        <form action="{% url 'accounts:logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <div class="alert alert-warning">
+                <strong>You need to be logged in to view your TODOs.</strong>
+                <p>
+                    <a href="{% url 'accounts:login' %}">Login</a>
+                </p>
+            </div>
+        {% endif %}
     </body>
 </html>
